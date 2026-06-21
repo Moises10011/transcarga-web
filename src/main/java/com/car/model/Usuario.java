@@ -1,26 +1,21 @@
-package com.cargoconnect.api.model;
+package com.car.model;
 
-import jakarta.persistence.*;
+import jakarta.persistence.Entity;
+import jakarta.persistence.GeneratedValue;
+import jakarta.persistence.GenerationType;
+import jakarta.persistence.Id;
+import jakarta.persistence.Table;
 
 @Entity
-@Table(name = "usuarios")
+@Table(name = "usuarios") 
 public class Usuario {
 
     @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @GeneratedValue(strategy = GenerationType.IDENTITY) // Autoincrementable
     private Long id;
 
-    @Column(nullable = false, length = 100)
     private String nombre;
-
-    @Column(nullable = false, unique = true, length = 100)
     private String email;
-
-    @Column(nullable = false, length = 255)
-    private String password;
-
-    @Column(nullable = false, length = 20)
-    private String rol; 
 
     
     public Long getId() { return id; }
@@ -29,8 +24,4 @@ public class Usuario {
     public void setNombre(String nombre) { this.nombre = nombre; }
     public String getEmail() { return email; }
     public void setEmail(String email) { this.email = email; }
-    public String getPassword() { return password; }
-    public void setPassword(String password) { this.password = password; }
-    public String getRol() { return rol; }
-    public void setRol(String rol) { this.rol = rol; }
 }
