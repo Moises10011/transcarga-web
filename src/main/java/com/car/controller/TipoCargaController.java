@@ -2,8 +2,6 @@ package com.car.controller;
 
 import com.car.model.TipoCarga;
 import com.car.service.TipoCargaService;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import java.util.List;
@@ -12,19 +10,35 @@ import java.util.List;
 @RequestMapping("/api/tipos-carga")
 public class TipoCargaController {
 
-    @Autowired
-    private TipoCargaService tipoCargaService;
+    private final TipoCargaService tipoCargaService;
 
-    // Endpoint: GET http://localhost:8080/api/tipos-carga
-    @GetMapping
-    public List<TipoCarga> obtenerTodos() {
-        return tipoCargaService.listarTodas();
+    public TipoCargaController(TipoCargaService tipoCargaService) {
+        this.tipoCargaService = tipoCargaService;
     }
 
-    // Endpoint: POST http://localhost:8080/api/tipos-carga
+    @GetMapping
+    public ResponseEntity<List<TipoCarga>> listarTodos() {
+        return ResponseEntity.ok(tipoCargaService.listarTodos());
+    }
+
+    @GetMapping("/{id}")
+    public ResponseEntity<TipoCarga> buscarPorId(@PathVariable Long id) {
+        return ResponseEntity.ok(tipoCargaService.buscarPorId(id));
+    }
+
     @PostMapping
     public ResponseEntity<TipoCarga> crear(@RequestBody TipoCarga tipoCarga) {
-        TipoCarga nuevoTipo = tipoCargaService.guardar(tipoCarga);
-        return new ResponseEntity<>(nuevoTipo, HttpStatus.CREATED);
+        return ResponseEntity.ok(tipoCargaService.crear(tipoCarga));
+    }
+
+    @PutMapping("/{id}")
+    public ResponseEntity<TipoCarga> actualizar(@PathVariable Long id, @RequestBody TipoCarga tipoCarga) {
+        return ResponseEntity.ok(tipoCargaService.actualizar(id, tipoCarga));
+    }
+
+    @DeleteMapping("/{id}")
+    public ResponseEntity<Void> eliminar(@PathVariable Long id) {
+        tipoCargaService.eliminar(id);
+        return ResponseEntity.noContent().build();
     }
 }

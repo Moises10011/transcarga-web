@@ -2,32 +2,28 @@ package com.car.service;
 
 import com.car.model.Carga;
 import com.car.repository.CargaRepository;
-import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import java.util.List;
 
 @Service
-@RequiredArgsConstructor
 public class CargaService {
 
     private final CargaRepository cargaRepository;
 
-    public List<Carga> listarTodas() {
-        return cargaRepository.findAll();
+    public CargaService(CargaRepository cargaRepository) {
+        this.cargaRepository = cargaRepository;
     }
+
+    public List<Carga> listarTodas() { return cargaRepository.findAll(); }
 
     public Carga buscarPorId(Long id) {
         return cargaRepository.findById(id)
                 .orElseThrow(() -> new RuntimeException("Carga no encontrada con id: " + id));
     }
 
-    public List<Carga> listarPorUsuario(Long usuarioId) {
-        return cargaRepository.findByUsuarioId(usuarioId);
-    }
+    public List<Carga> listarPorUsuario(Long usuarioId) { return cargaRepository.findByUsuarioId(usuarioId); }
 
-    public List<Carga> listarPorEstado(Carga.EstadoCarga estado) {
-        return cargaRepository.findByEstado(estado);
-    }
+    public List<Carga> listarPorEstado(Carga.EstadoCarga estado) { return cargaRepository.findByEstado(estado); }
 
     public Carga crear(Carga carga) {
         carga.setEstado(Carga.EstadoCarga.PENDIENTE);
@@ -45,7 +41,5 @@ public class CargaService {
         return cargaRepository.save(existente);
     }
 
-    public void eliminar(Long id) {
-        cargaRepository.deleteById(id);
-    }
+    public void eliminar(Long id) { cargaRepository.deleteById(id); }
 }

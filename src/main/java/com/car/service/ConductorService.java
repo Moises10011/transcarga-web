@@ -2,19 +2,19 @@ package com.car.service;
 
 import com.car.model.Conductor;
 import com.car.repository.ConductorRepository;
-import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import java.util.List;
 
 @Service
-@RequiredArgsConstructor
 public class ConductorService {
 
     private final ConductorRepository conductorRepository;
 
-    public List<Conductor> listarTodos() {
-        return conductorRepository.findAll();
+    public ConductorService(ConductorRepository conductorRepository) {
+        this.conductorRepository = conductorRepository;
     }
+
+    public List<Conductor> listarTodos() { return conductorRepository.findAll(); }
 
     public Conductor buscarPorId(Long id) {
         return conductorRepository.findById(id)
@@ -27,12 +27,10 @@ public class ConductorService {
     }
 
     public Conductor crear(Conductor conductor) {
-        if (conductorRepository.existsByTelefono(conductor.getTelefono())) {
+        if (conductorRepository.existsByTelefono(conductor.getTelefono()))
             throw new RuntimeException("Ya existe un conductor con ese teléfono");
-        }
-        if (conductorRepository.existsByNumeroLicencia(conductor.getNumeroLicencia())) {
+        if (conductorRepository.existsByNumeroLicencia(conductor.getNumeroLicencia()))
             throw new RuntimeException("Ya existe un conductor con esa licencia");
-        }
         return conductorRepository.save(conductor);
     }
 
@@ -46,7 +44,5 @@ public class ConductorService {
         return conductorRepository.save(existente);
     }
 
-    public void eliminar(Long id) {
-        conductorRepository.deleteById(id);
-    }
+    public void eliminar(Long id) { conductorRepository.deleteById(id); }
 }
