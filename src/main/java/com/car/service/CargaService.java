@@ -2,29 +2,44 @@ package com.car.service;
 
 import com.car.model.Carga;
 import com.car.repository.CargaRepository;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import java.util.List;
 
 @Service
 public class CargaService {
 
-    @Autowired
-    private CargaRepository cargaRepository;
+    private final CargaRepository cargaRepository;
 
-    
-    public List<Carga> listarTodos() {
-        return cargaRepository.findAll();
+    public CargaService(CargaRepository cargaRepository) {
+        this.cargaRepository = cargaRepository;
     }
 
-    
-    public Carga guardar(Carga carga) {
-        if (carga.getPesoKg() != null && carga.getPesoKg() < 0) {
-            throw new IllegalArgumentException("El peso de la carga no puede ser negativo");
-        }
-        if (carga.getPrecioFlete() != null && carga.getPrecioFlete() < 0) {
-            throw new IllegalArgumentException("El precio del flete no puede ser negativo");
-        }
+    public List<Carga> listarTodas() { return cargaRepository.findAll(); }
+
+    public Carga buscarPorId(Long id) {
+        return cargaRepository.findById(id)
+                .orElseThrow(() -> new RuntimeException("Carga no encontrada con id: " + id));
+    }
+
+    public List<Carga> listarPorUsuario(Long usuarioId) { return cargaRepository.findByUsuarioId(usuarioId); }
+
+    public List<Carga> listarPorEstado(Carga.EstadoCarga estado) { return cargaRepository.findByEstado(estado); }
+
+    public Carga crear(Carga carga) {
+        carga.setEstado(Carga.EstadoCarga.PENDIENTE);
         return cargaRepository.save(carga);
     }
+
+    public Carga actualizar(Long id, Carga datos) {
+        Carga existente = buscarPorId(id);
+        existente.setDescripcionEnvio(datos.getDescripcionEnvio());
+        existente.setPesoKg(datos.getPesoKg());
+        existente.setPrecioFlete(datos.getPrecioFlete());
+        existente.setEstado(datos.getEstado());
+        existente.setTipoCarga(datos.getTipoCarga());
+        existente.setVehiculo(datos.getVehiculo());
+        return cargaRepository.save(existente);
+    }
+
+    public void eliminar(Long id) { cargaRepository.deleteById(id); }
 }
